@@ -1,4 +1,4 @@
 AccelerometerService
 ====================
 
-Simple android service worked with accelerometer.
+Simple android service working with accelerometer.
