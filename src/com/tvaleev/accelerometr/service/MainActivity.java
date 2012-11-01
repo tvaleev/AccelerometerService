@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private AccelerometrService s;
+	private boolean mIsBound;
 
 	private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -56,6 +57,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				stopService(new Intent(MainActivity.this,
 						AccelerometrService.class));
+				doUnbindService();
 				accData.setText("Stopped");
 			}
 		});
@@ -72,5 +74,13 @@ public class MainActivity extends Activity {
 	void doBindService() {
 		bindService(new Intent(this, AccelerometrService.class), mConnection,
 				Context.BIND_AUTO_CREATE);
+		mIsBound = true;
+	}
+	
+	void doUnbindService() {
+	    if (mIsBound) {
+	        unbindService(mConnection);
+	        mIsBound = false;
+	    }
 	}
 }

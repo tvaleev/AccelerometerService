@@ -15,9 +15,9 @@ public class AccelerometrService extends Service implements SensorEventListener 
 
 	private SensorManager sensorManager;
 	private final IBinder mBinder = new AccBinder();
-	
+
 	private float DataFromAccelerometr;
-	
+
 	public float getDataFromAccelerometr() {
 		return DataFromAccelerometr;
 	}
@@ -39,18 +39,20 @@ public class AccelerometrService extends Service implements SensorEventListener 
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 	}
 
-	@Override
-	public void onStart(Intent intent, int startid) {
-		Log.d("[Timur]","calling onStart");
-		Toast.makeText(this, "Service is run", Toast.LENGTH_SHORT).show();
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+    	Toast.makeText(this, "Service is run", Toast.LENGTH_SHORT).show();
 		sensorManager.registerListener(this,
 				sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 				SensorManager.SENSOR_DELAY_NORMAL);
-	}
+
+        return START_STICKY;
+    }
 
 	@Override
 	public void onDestroy() {
-		Log.d("[Timur]","calling onDestroy");
+		Log.d("[Timur]", "calling onDestroy");
 		Toast.makeText(this, "Service is stopped", Toast.LENGTH_SHORT).show();
 		sensorManager.unregisterListener(this);
 	}
@@ -71,7 +73,7 @@ public class AccelerometrService extends Service implements SensorEventListener 
 
 		float accelationSquareRoot = (x * x + y * y + z * z)
 				/ (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
-		
+
 		DataFromAccelerometr = accelationSquareRoot;
 	}
 
