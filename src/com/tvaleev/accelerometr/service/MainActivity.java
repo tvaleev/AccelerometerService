@@ -14,73 +14,83 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
-	private AccelerometrService s;
-	private boolean mIsBound;
+    private AccelerometrService s;
+    private boolean mIsBound;
 
-	private ServiceConnection mConnection = new ServiceConnection() {
+    private ServiceConnection mConnection = new ServiceConnection() {
 
-		public void onServiceConnected(ComponentName className, IBinder binder) {
-			s = ((AccelerometrService.AccBinder) binder).getService();
-			Toast.makeText(MainActivity.this, "Connected", Toast.LENGTH_SHORT)
-					.show();
-		}
+        public void onServiceConnected(ComponentName className, IBinder binder) {
+            s = ((AccelerometrService.AccBinder) binder).getService();
+            Toast.makeText(MainActivity.this, "Connected", Toast.LENGTH_SHORT)
+                    .show();
+        }
 
-		public void onServiceDisconnected(ComponentName className) {
-			s = null;
-		}
-	};
+        public void onServiceDisconnected(ComponentName className) {
+            s = null;
+            Toast.makeText(MainActivity.this, "Disconnected",
+                    Toast.LENGTH_SHORT).show();
+        }
+    };
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-		final Button btnStart = (Button) findViewById(R.id.btn_start);
-		final Button btnStop = (Button) findViewById(R.id.btn_stop);
-		final TextView accData = (TextView) findViewById(R.id.acc_text_data);
+        final Button btnStart = (Button) findViewById(R.id.btn_start);
+        final Button btnStop = (Button) findViewById(R.id.btn_stop);
+        final Button btnShow = (Button) findViewById(R.id.btn_show_data);
+        final TextView accData = (TextView) findViewById(R.id.acc_text_data);
 
-		btnStart.setOnClickListener(new View.OnClickListener() {
+        btnStart.setOnClickListener(new View.OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				startService(new Intent(MainActivity.this,
-						AccelerometrService.class));
-				if (s != null) {
-					accData.setText(Float.toString(s.getDataFromAccelerometr()));
-				}
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                startService(new Intent(MainActivity.this,
+                        AccelerometrService.class));
+            }
+        });
 
-		btnStop.setOnClickListener(new View.OnClickListener() {
+        btnStop.setOnClickListener(new View.OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				stopService(new Intent(MainActivity.this,
-						AccelerometrService.class));
-				doUnbindService();
-				accData.setText("Stopped");
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                stopService(new Intent(MainActivity.this,
+                        AccelerometrService.class));
+                doUnbindService();
+                accData.setText("Stopped");
+            }
+        });
 
-		doBindService();
-	}
+        btnShow.setOnClickListener(new View.OnClickListener() {
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
-	}
+            @Override
+            public void onClick(View v) {
+                if (s != null) {
+                    accData.setText(Float.toString(s.getDataFromAccelerometr()));
+                }
+            }
+        });
 
-	void doBindService() {
-		bindService(new Intent(this, AccelerometrService.class), mConnection,
-				Context.BIND_AUTO_CREATE);
-		mIsBound = true;
-	}
-	
-	void doUnbindService() {
-	    if (mIsBound) {
-	        unbindService(mConnection);
-	        mIsBound = false;
-	    }
-	}
+        doBindService();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
+
+    void doBindService() {
+        bindService(new Intent(this, AccelerometrService.class), mConnection,
+                Context.BIND_AUTO_CREATE);
+        mIsBound = true;
+    }
+
+    void doUnbindService() {
+        if (mIsBound) {
+            unbindService(mConnection);
+            mIsBound = false;
+        }
+    }
 }

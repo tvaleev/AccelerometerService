@@ -15,6 +15,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Stop" />
+    
+    <Button
+        android:id="@+id/btn_show_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show data" />
 
     <TextView
         android:id="@+id/acc_text_data"
