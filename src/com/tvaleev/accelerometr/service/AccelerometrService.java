@@ -1,5 +1,6 @@
 package com.tvaleev.accelerometr.service;
 
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -14,7 +15,6 @@ public class AccelerometrService extends Service implements SensorEventListener 
 
     private SensorManager sensorManager;
     private final IBinder mBinder = new AccBinder();
-
     private static float dataFromAccelerometer = 0;
 
     public float getDataFromAccelerometr() {
@@ -42,7 +42,7 @@ public class AccelerometrService extends Service implements SensorEventListener 
     public int onStartCommand(Intent intent, int flags, int startId) {
         boolean sr = sensorManager.registerListener(this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_NORMAL);
+                SensorManager.SENSOR_DELAY_NORMAL); // SENSOR_DELAY_GAME
         Toast.makeText(this, "Service is run " + sr, Toast.LENGTH_SHORT).show();
 
         return START_STICKY;
@@ -68,10 +68,10 @@ public class AccelerometrService extends Service implements SensorEventListener 
         float x = values[0];
         float y = values[1];
         float z = values[2];
-        
+
         float accelationSquareRoot = (x * x + y * y + z * z)
                 / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
-                        
+
         dataFromAccelerometer = accelationSquareRoot;
     }
 

@@ -16,6 +16,8 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
     private AccelerometrService s;
     private boolean mIsBound;
+    
+    private NotificationUtils notificationMain;
 
     private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -42,12 +44,15 @@ public class MainActivity extends Activity {
         final Button btnShow = (Button) findViewById(R.id.btn_show_data);
         final TextView accData = (TextView) findViewById(R.id.acc_text_data);
 
+        notificationMain = NotificationUtils.getInstance(getBaseContext());
+
         btnStart.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 startService(new Intent(MainActivity.this,
                         AccelerometrService.class));
+                notificationMain.createInfoNotification("Start service");
             }
         });
 
@@ -58,6 +63,7 @@ public class MainActivity extends Activity {
                 stopService(new Intent(MainActivity.this,
                         AccelerometrService.class));
                 doUnbindService();
+                notificationMain.createInfoNotification("Stop service");
                 accData.setText("Stopped");
             }
         });
@@ -93,4 +99,5 @@ public class MainActivity extends Activity {
             mIsBound = false;
         }
     }
+
 }
